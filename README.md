@@ -1,6 +1,6 @@
 # Eatsy
 
-Eatsy adalah aplikasi web FnB yang mengintegrasikan mahasiswa dengan tenant kantin untuk meminimalkan antrean. Mahasiswa dapat memesan dan membayar pesanan secara daring, sehingga waktu istirahat menjadi lebih efisien karena mahasiswa hanya tinggal mengambil pesanan di tenant kantin.
+Eatsy adalah aplikasi web FnB yang mengintegrasikan mahasiswa dengan tenant kantin untuk meminimalkan antrean. Mahasiswa dapat memesan dan membayar pesanan secara daring sehingga waktu istirahat menjadi lebih efisien karena mahasiswa hanya tinggal mengambil pesanan di tenant kantin.
 
 ## Contributors (Kelompok III)
 - Brian Filbert Chandra - `Cipaimian`
@@ -26,10 +26,10 @@ Eatsy adalah aplikasi web FnB yang mengintegrasikan mahasiswa dengan tenant kant
 ## Local Development
 
 ```bash
-npm install
+npm install --no-audit --no-fund
 npm run lint
-npm test
-npm start  # Buka di http://localhost:3000
+npm run smoke
+npm start  # http://localhost:3000
 ```
 
 ## Docker
@@ -37,6 +37,10 @@ npm start  # Buka di http://localhost:3000
 ```bash
 docker build -t eatsy .
 docker run -it --rm -p 3000:3000 eatsy
+
+-it             = interaction dengan terminal
+--rm            = otomatis delete container saat berhenti
+-p 3000:3000    = Untuk penentuan port, host_port:container_port
 ```
 
 ## CI/CD & DevSecOps Pipeline
@@ -51,7 +55,7 @@ Pipeline dijalankan via **GitHub Actions** dengan 3 trigger utama:
 
 ### Alur Pipeline (`.github/workflows/ci.yml`)
 
-1. **Build & Test** : checkout, `npm ci`, `npm run lint`, `npm test` (Jest, coverage diupload).
+1. **Build & Test** : checkout, `npm install --no-audit --no-fund`, `npm run lint`, `npm run smoke`.
 2. **Security Gate** (paralel):
    - **SAST : CodeQL** (`codeql.yml`): SQL Injection, XSS, hardcoded secret, command injection, path traversal. Hasil masuk ke tab Security GitHub.
    - **SCA : npm audit**: `npm audit --audit-level=high` : pipeline berhenti kalau ada vulnerability high/critical.
