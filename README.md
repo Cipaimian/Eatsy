@@ -1,47 +1,69 @@
-# docker-collaboration
+# Eatsy
 
-# Contributors 
-    Kelompok III
-    - Anak Agung Ngurah Bagus Rama Putra Suteja - 2802531460
-    - Brian Filbert Chandra - 2802529733
-    - Digyo Rizky Shine Brutu - 2802523244
-    - Seraphine Kartolo - 2802526100
-    - Muhammad Rafi Bagaskara - 2802510185
+Eatsy adalah aplikasi web FnB yang mengintegrasikan mahasiswa dengan tenant kantin untuk meminimalkan antrean. Mahasiswa dapat memesan dan membayar pesanan secara daring, sehingga waktu istirahat menjadi lebih efisien karena mahasiswa hanya tinggal mengambil pesanan di tenant kantin.
 
-# Description
-This is a docker collaboration project consisting a SSTI debug web to learn basic web exploitation.
+## Contributors (Kelompok III)
+- Brian Filbert Chandra - `Cipaimian`
+- Muhammad Rafi Bagaskara - `PStarz5`
+- Digyo Rizky Shine Brutu - `kurayami04`
+- Seraphine Kartolo - `cybssera19`
+- Anak Agung Ngurah Bagus Rama Putra Suteja - `clodyrama`
 
-# Using docker step by step
-Download the code from GitHub:
-```bash
-git clone https://github.com/Cipaimian/web-exploitation-script.git
-```
-Move to one of the script directory:
-```bash
-cd web-exploitation-script/ssti-debug
-```
-Check for file ```Dockerfile``` inside the directory
-```bash
-$ ls
-app.py  Dockerfile  requirements.txt
-```
-Build the image using docker command:
-```bash
-docker build -t project-name .
+## Aktor
+1. **Mahasiswa**: Browse menu, bayar, pantau status, buat pesanan, beri ulasan
+2. **Tenant / Penjual**: Kelola ketersediaan menu, terima/tolak pesanan, konfirmasi pengambilan
+3. **Admin**: Monitoring transaksi total, audit keamanan, manajemen data tenant
 
--t project-name = image name
-.               = image will be made inside current directory
-```
-Run the container:
+## Fitur Utama
+- Browse Tenant: `GET /api/tenants`
+- Browse Menu: `GET /api/menus?tenantId=...`
+- Order: `POST /api/orders`
+- Payment: `POST /api/payments`
+- Feedback: `POST /api/feedback`
+- History: `GET /api/history/:studentId`
+
+
+## Local Development
+
 ```bash
-docker run -it --rm -p 10000:10000 project-name
+npm install
+npm run lint
+npm test
+npm start  # Buka di http://localhost:3000
 ```
-```
--it             = better interaction for terminal
---rm            = automatically deletes the container when it stops
--p 10000:10000  = stands for port, host_port:container_port
-```
-The app is running in browser:
+
+## Docker
+
 ```bash
-http://127.0.0.1:10000
+docker build -t eatsy .
+docker run -it --rm -p 3000:3000 eatsy
 ```
+
+## CI/CD & DevSecOps Pipeline
+
+Pipeline dijalankan via **GitHub Actions** dengan 3 trigger utama:
+
+| Trigger | Workflow | Tujuan |
+| --- | --- | --- |
+| Push ke `main` / `develop` | `ci.yml` + `codeql.yml` | Full pipeline + deployment |
+| Pull Request ke `main` / `develop` | `ci.yml` + `codeql.yml` | Intercept code tidak aman sebelum merge |
+| Setiap senin 02:00 WIB | `security-routine.yml` + `codeql.yml` | Audit proaktif untuk CVE / zero day baru |
+
+### Alur Pipeline (`.github/workflows/ci.yml`)
+
+1. **Build & Test** : checkout, `npm ci`, `npm run lint`, `npm test` (Jest, coverage diupload).
+2. **Security Gate** (paralel):
+   - **SAST : CodeQL** (`codeql.yml`): SQL Injection, XSS, hardcoded secret, command injection, path traversal. Hasil masuk ke tab Security GitHub.
+   - **SCA : npm audit**: `npm audit --audit-level=high` : pipeline berhenti kalau ada vulnerability high/critical.
+   - **Secret Scanning : Gitleaks**: scan commit history + working tree (config: `.gitleaks.toml`).
+   - **Container Scan : Trivy**: scan image hasil `docker build` untuk CVE OS/package, output SARIF.
+3. **Report Stage** : Semua hasil dikirim ke GitHub Security tab dalam format **SARIF**.
+4. **Decision Gate** : Pipeline berhenti jika ada temuan critical/high di salah satu gate.
+5. **Deploy Stage**:
+   - `develop` → **staging** (manual testing).
+   - `main` → **production** (setelah staging hijau).
+6. **Notification** : Email otomatis ke tim developer (butuh secrets: `SMTP_SERVER`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `NOTIFY_EMAIL`).
+
+### Secrets yang Diperlukan
+- `SMTP_SERVER`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `NOTIFY_EMAIL` : notifikasi email
+- (Opsional, untuk deploy nyata) credentials cloud / registry
