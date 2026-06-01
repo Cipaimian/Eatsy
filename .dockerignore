@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+coverage
+.git
+.github
+.env
+.env.local
+tests
+*.md
+.eslintrc.json
+.gitleaks.toml
