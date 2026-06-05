@@ -83,3 +83,5 @@ router.patch('/:id/status', (req, res) => {
   order.status = status;
   res.json(order);
 });
+
+module.exports = router;
