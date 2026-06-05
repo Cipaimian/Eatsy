@@ -17,12 +17,19 @@
   },
   "overrides": [
     {
-      "files": ["public/**/*.js"],
+      "files": ["web/**/*.{js,jsx}"],
       "env": { "browser": true, "node": false },
-      "globals": {
-        "fetch": "readonly",
-        "alert": "readonly",
-        "confirm": "readonly"
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "ecmaFeatures": { "jsx": true }
+      },
+      "plugins": ["react"],
+      "extends": ["plugin:react/recommended"],
+      "settings": { "react": { "version": "detect" } },
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off"
       }
     }
   ]

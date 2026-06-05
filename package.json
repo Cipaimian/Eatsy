@@ -6,9 +6,11 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "lint": "eslint \"src/**/*.js\" \"public/**/*.js\"",
-    "lint:fix": "eslint \"src/**/*.js\" \"public/**/*.js\" --fix",
-    "smoke": "node -e \"const app = require('./src/app'); const s = app.listen(0, () => { console.log('Smoke OK on port', s.address().port); s.close(); });\""
+    "lint": "eslint \"src/**/*.js\" \"web/**/*.{js,jsx}\"",
+    "lint:fix": "eslint \"src/**/*.js\" \"web/**/*.{js,jsx}\" --fix",
+    "smoke": "node -e \"const app = require('./src/app'); const s = app.listen(0, () => { console.log('Smoke OK on port', s.address().port); s.close(); });\"",
+    "dev:web": "vite --config web/vite.config.js",
+    "build:web": "vite build --config web/vite.config.js"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -19,7 +21,13 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
-    "nodemon": "^3.1.0"
+    "eslint-plugin-react": "^7.35.0",
+    "nodemon": "^3.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
+    "vite": "^5.4.0"
   }
 }
