@@ -21,6 +21,12 @@ app.get('/health', (req, res) => {
 app.use('/api/tenants', tenantsRouter);
 app.use('/api/menus', menusRouter);
 
+// SPA fallback: request non-/api dibalikin index.html biar client-side routing jalan.
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
