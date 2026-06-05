@@ -1,4 +1,12 @@
-// POST /api/orders bikin pesanan baru
+const express = require('express');
+const { orders, menus } = require('../data/store');
+
+const router = express.Router();
+
+// Status yang valid buat transisi tenant (dipakai di PATCH /:id/status)
+const ALLOWED_STATUS = ['ACCEPTED', 'REJECTED', 'READY', 'PICKED_UP'];
+
+// POST /api/orders — bikin pesanan baru
 // body: { studentId, items: [{ menuId, qty }] }
 router.post('/', (req, res) => {
   const { studentId, items } = req.body;
@@ -47,7 +55,7 @@ router.post('/', (req, res) => {
   res.status(201).json(order);
 });
 
-// GET /api/orders, list semua order (boleh filter ?studentId= / ?tenantId=)
+// GET /api/orders — list semua order (boleh filter ?studentId= / ?tenantId=)
 router.get('/', (req, res) => {
   const { studentId, tenantId } = req.query;
   let result = orders;
@@ -60,7 +68,7 @@ router.get('/', (req, res) => {
   res.json(result);
 });
 
-// GET /api/orders/:id detail satu order
+// GET /api/orders/:id — detail satu order
 router.get('/:id', (req, res) => {
   const order = orders.find((o) => o.id === req.params.id);
   if (!order) {
@@ -69,7 +77,7 @@ router.get('/:id', (req, res) => {
   res.json(order);
 });
 
-// PATCH /api/orders/:id/status tenant ubah status order
+// PATCH /api/orders/:id/status — tenant ubah status order
 // body: { status }
 router.patch('/:id/status', (req, res) => {
   const order = orders.find((o) => o.id === req.params.id);
@@ -83,3 +91,5 @@ router.patch('/:id/status', (req, res) => {
   order.status = status;
   res.json(order);
 });
+
+module.exports = router;
