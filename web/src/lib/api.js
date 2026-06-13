@@ -1,5 +1,3 @@
-// Port dari public/js/shared.js (window.Eatsy.api / rupiah).
-// Same-origin: Express nyajiin API (/api/*) + static build di port yang sama.
 export async function api(path, opts = {}) {
   const res = await fetch(path, {
     headers: { 'Content-Type': 'application/json' },
