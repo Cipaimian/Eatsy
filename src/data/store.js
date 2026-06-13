@@ -20,11 +20,9 @@ const DEFAULTS = {
     { id: 'm8', tenantId: 't3', name: 'Soto Ayam',          price: 18000, available: false }
   ],
   users: [
-    { id: 'u1', name: 'Budi Santoso', role: 'mahasiswa', refId: 'stu1', email: 'budi@student.ac.id',  password: 'budi123'     },
-    { id: 'u2', name: 'Sari Dewi',    role: 'mahasiswa', refId: 'stu2', email: 'sari@student.ac.id',  password: 'sari123'     },
-    { id: 'u3', name: 'Pak Effata',   role: 'tenant',    refId: 't1',   email: 'effata@kantin.id',    password: 'effata123'   },
-    { id: 'u4', name: 'Bu Oriental',  role: 'tenant',    refId: 't2',   email: 'oriental@kantin.id',  password: 'oriental123' },
-    { id: 'u5', name: 'Bu Cerita',    role: 'tenant',    refId: 't3',   email: 'cerita@kantin.id',    password: 'cerita123'   }
+    { id: 'u1', name: 'Pak Effata',  role: 'tenant', refId: 't1', email: 'effata@kantin.id',   password: 'effata123'   },
+    { id: 'u2', name: 'Bu Oriental', role: 'tenant', refId: 't2', email: 'oriental@kantin.id', password: 'oriental123' },
+    { id: 'u3', name: 'Bu Cerita',   role: 'tenant', refId: 't3', email: 'cerita@kantin.id',   password: 'cerita123'   }
   ],
   orders:   [],
   payments: [],
@@ -65,5 +63,7 @@ db.feedback = watched(db.feedback);
 db.users    = watched(db.users);
 db.menus    = watched(db.menus);
 db.tenants  = watched(db.tenants);
+
+db.save = save;
 
 module.exports = db;
