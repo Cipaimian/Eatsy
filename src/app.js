@@ -3,8 +3,13 @@ const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const authRouter    = require('./routes/auth');
 const tenantsRouter = require('./routes/tenants');
 const menusRouter = require('./routes/menus');
+const ordersRouter = require('./routes/orders');
+const paymentsRouter = require('./routes/payments');
+const feedbackRouter = require('./routes/feedback');
+const historyRouter = require('./routes/history');
 
 const app = express();
 
@@ -18,10 +23,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'eatsy' });
 });
 
+app.use('/api/auth',    authRouter);
 app.use('/api/tenants', tenantsRouter);
 app.use('/api/menus', menusRouter);
+app.use('/api/orders', ordersRouter);
+app.use('/api/payments', paymentsRouter);
+app.use('/api/feedback', feedbackRouter);
+app.use('/api/history', historyRouter);
 
-// SPA fallback: request non-/api dibalikin index.html biar client-side routing jalan.
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
